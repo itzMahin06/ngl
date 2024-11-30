@@ -80,7 +80,7 @@
     }
 
     textarea {
-       font-family: "Srabondhara"; 
+       font-family: "Srabondhara", "Inter"; 
       width: 100%;
       max-width: 500px;
       height: 150px;
