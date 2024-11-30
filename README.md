@@ -8,7 +8,7 @@ _Design and Developed by:_ **Mahmudul Islam Mahin**
 - All mesaage will be shown in Telegram 
 - Easily take screenshots of the message and upload it in IG or FB.
 
-**Visit Link:** [ngl.itzmahin.my.id](url) 
+**Visit Link:** 
 
 ```html
 ngl.itzmahin.my.id
@@ -16,7 +16,7 @@ ngl.itzmahin.my.id
 
 **If you download it for use of you, it cannot work. If you want to purchase or gift from me, then email me** 
 
-_email_ [info@itzmahin.my.id ](url)
+_Email_ 
  
 ```html
 info@itzmahin.my.id
