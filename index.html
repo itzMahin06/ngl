@@ -19,8 +19,8 @@
       --disabled-button-color: #666666;
       --response-bg: #28a745;
       --response-text-color: #ffffff;
-      --notification-bg: #f44336;
-      --notification-text: #ffffff;
+      --notification-bg: ##ddffde;
+      --notification-text: ##0d100d;
     }
 
     [data-theme="dark"] {
@@ -324,7 +324,7 @@
 
       const data = {
         chat_id: chatId,
-        text: `Anonymous Message: ${message}`,
+        text: `${message}`,
       };
 
       try {
@@ -362,7 +362,7 @@
 
     function startCountdown() {
       let timeLeft = 60;
-      showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
+      showNotification(`Your message send successfully. Please wait ${timeLeft} seconds before sending another message.`);
 
       const interval = setInterval(() => {
         timeLeft -= 1;
