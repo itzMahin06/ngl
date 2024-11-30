@@ -221,15 +221,20 @@
   font-weight: bold;
 }
 
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+.follow-btn {
+  background-color: #0095f6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  margin-top: 10px;
 }
 
-.post img {
-  width: 100%;
-  border-radius: 10px;
+.follow-btn:hover {
+  background-color: #0078d4;
 }
 
   </style>
@@ -248,6 +253,7 @@
           <span class="followers">128 Followers</span>
           <span class="following">34 Following</span>
         </div>
+        <button class="follow-btn">Follow</button>
       </div>
     </div>
   <div class="container">
