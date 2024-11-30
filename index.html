@@ -5,199 +5,237 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Anonymous Message</title>
   <style>
+    /* Base styles */
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --container-bg: #f5f5f5;
+      --button-bg: #000000;
+      --button-color: #ffffff;
+      --textarea-bg: #ffffff;
+      --textarea-text-color: #000000;
+      --textarea-border: #e0e0e0;
+    }
+
+    [data-theme="dark"] {
+      --bg-color: #121212;
+      --text-color: #ffffff;
+      --container-bg: #1e1e1e;
+      --button-bg: #ffffff;
+      --button-color: #000000;
+      --textarea-bg: #1e1e1e;
+      --textarea-text-color: #ffffff;
+      --textarea-border: #333333;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6f86d6, #48c6ef);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
       margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.3s ease;
     }
 
     .container {
-      text-align: center;
-      background: rgba(0, 0, 0, 0.5);
+      max-width: 600px;
+      margin: 0 auto;
       padding: 20px;
-      border-radius: 15px;
-      width: 90%;
-      max-width: 400px;
+      
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+      text-align: center;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
     h1 {
-      font-size: 1.8em;
-      margin-bottom: 10px;
+      font-size: 1.8rem;
+      margin: 0;
     }
 
-    p {
-      font-size: 1em;
-      margin-bottom: 20px;
+    .theme-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
     }
 
     form {
       display: flex;
       flex-direction: column;
+      align-items: center;
     }
 
     textarea {
-      width: 90%;
-      height: 100px;
-      border: none;
-      border-radius: 5px;
+      width: 100%;
+      max-width: 500px;
+      height: 150px;
+      border: 1px solid var(--textarea-border);
+      border-radius: 8px;
       padding: 10px;
-      margin-bottom: 10px;
+      font-size: 1rem;
+      background: var(--textarea-bg);
+      color: var(--textarea-text-color);
+      transition: all 0.3s ease;
       resize: none;
-      font-size: 1em;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: #000000;
     }
 
     button {
-      background: #48c6ef;
-      color: #fff;
+      margin-top: 15px;
+      padding: 10px 15px;
       border: none;
-      border-radius: 5px;
-      padding: 10px;
+      border-radius: 8px;
+      background: var(--button-bg);
+      color: var(--button-color);
+      font-size: 1rem;
       cursor: pointer;
-      font-size: 1em;
+      transition: background 0.3s ease;
     }
 
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
+    button:hover {
+      background: #333333;
     }
 
-    button:hover:enabled {
-      background: #6f86d6;
-    }
-
-    #response {
+    .response {
       margin-top: 20px;
       padding: 10px;
       
-      border-radius: 5px;
+      color: var(--button-color);
+      border-radius: 8px;
+      text-align: center;
     }
 
-    #countdown {
+    .countdown {
       margin-top: 10px;
-      color: #ffcc00;
-      font-size: 0.9em;
+      color: var(--text-color);
+      font-size: 0.9rem;
     }
-      .footer {
-  background: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  text-align: center;
-  padding: 15px 10px;
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  font-size: 0.9em;
-}
 
-.footer-content p {
-  margin: 5px 0;
-}
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 0.8rem;
+    }
 
-.footer-content a {
-  color: #48c6ef;
-  text-decoration: none;
-}
+    .footer a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-.footer-content a:hover {
-  text-decoration: underline;
-}
-
-    
+    .footer a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
-<body>
+<body data-theme="light">
   <div class="container">
-    <h1>Send Me an Anonymous Message</h1>
-    <p> ask me or send confessions! </p>
-    <form id="anonymousForm">
-      <textarea id="message" placeholder="Type your message here..." required></textarea>
-      <button type="submit" id="sendButton">Send Message</button>
-    </form>
-    <div id="response" class="hidden"></div>
-    <div id="countdown" class="hidden"></div>
-  </div>
-<footer class="footer">
-  <div class="footer-content">
-    <p>&copy; 2024 NGL (Mahin). All rights reserved.</p>
+    <header class="header">
+      <h1>Send Anonymous Message</h1>
+      <button id="themeToggle" class="theme-toggle">🌙</button>
+    </header>
+    <main>
+      <p> Share your thoughts anonymously! </p>
+      <form id="anonymousForm">
+        <textarea id="message" placeholder="Type your message here..." required></textarea>
+        <button type="submit" id="sendButton">Send Message</button>
+      </form>
+      <div id="response" class="response hidden"></div>
+      <div id="countdown" class="countdown hidden"></div>
+    </main>
+    <footer class="footer">
+      <p>&copy; 2024 NGL (Mahin). All rights reserved.</p>
     <p>
       Created with ❤️ | 
       <a href="https://www.instagram.com/_mahin728_" target="_blank"> Follow me on IG</a>
     </p>
+    </footer>
   </div>
-</footer>
-
   <script>
-   document.getElementById('anonymousForm').addEventListener('submit', async function (event) {
-  event.preventDefault();
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
 
-  const message = document.getElementById('message').value;
-  const sendButton = document.getElementById('sendButton');
-  const countdownDiv = document.getElementById('countdown');
-  const responseDiv = document.getElementById('response');
-
-  if (!message.trim()) {
-    alert('Please type a message!');
-    return;
-  }
-
-  // Get browser and device details
-  const userAgent = navigator.userAgent;
-  const platform = navigator.platform;
-  const browserInfo = `User-Agent: ${userAgent}\nPlatform: ${platform}`;
-
-  const fullMessage = `Message: ${message}\n\n---\n${browserInfo}`;
-
-  try {
-    // Replace with your Telegram bot token and chat ID
-    const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E';
-    const chatId = '-1002020745172';
-    const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text: fullMessage })
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      body.setAttribute('data-theme', newTheme);
+      themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
     });
 
-    const result = await response.json();
+    document.getElementById('anonymousForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
 
-    if (result.ok) {
-      responseDiv.textContent = 'Your message has been sent successfully!';
-      responseDiv.classList.remove('hidden');
-      document.getElementById('anonymousForm').reset();
-      disableButtonWithCountdown(sendButton, countdownDiv);
-    } else {
-      responseDiv.textContent = 'Something went wrong. Please try again later.';
-      responseDiv.classList.remove('hidden');
+      const message = document.getElementById('message').value;
+      const sendButton = document.getElementById('sendButton');
+      const countdownDiv = document.getElementById('countdown');
+      const responseDiv = document.getElementById('response');
+
+      if (!message.trim()) {
+        alert('Please type a message!');
+        return;
+      }
+
+      const userAgent = navigator.userAgent;
+      const platform = navigator.platform;
+      const browserInfo = `User-Agent: ${userAgent}\nPlatform: ${platform}`;
+
+      const fullMessage = `Message: ${message}\n\n---\n${browserInfo}`;
+
+      try {
+        const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E';
+        const chatId = '-1002020745172';
+        const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, text: fullMessage })
+        });
+
+        const result = await response.json();
+
+        if (result.ok) {
+          responseDiv.textContent = 'Your message has been sent successfully!';
+          responseDiv.classList.remove('hidden');
+          document.getElementById('anonymousForm').reset();
+          disableButtonWithCountdown(sendButton, countdownDiv);
+        } else {
+          responseDiv.textContent = 'Something went wrong. Please try again later.';
+          responseDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        responseDiv.textContent = 'Error sending message. Please try again later.';
+        responseDiv.classList.remove('hidden');
+      }
+    });
+
+    function disableButtonWithCountdown(button, countdownDiv) {
+      button.disabled = true;
+      let timeLeft = 60;
+      countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+      countdownDiv.classList.remove('hidden');
+
+      const interval = setInterval(() => {
+        timeLeft -= 1;
+        countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          button.disabled = false;
+          countdownDiv.classList.add('hidden');
+        }
+      }, 1000);
     }
-  } catch (error) {
-    responseDiv.textContent = 'Error sending message. Please try again later.';
-    responseDiv.classList.remove('hidden');
-  }
-});
-
-function disableButtonWithCountdown(button, countdownDiv) {
-  button.disabled = true;
-  let timeLeft = 60; // 1 minute countdown
-  countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
-  countdownDiv.classList.remove('hidden');
-
-  const interval = setInterval(() => {
-    timeLeft -= 1;
-    countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
-
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      button.disabled = false;
-      countdownDiv.classList.add('hidden');
-    }
-  }, 1000);
-}
-
   </script>
 </body>
 </html>
