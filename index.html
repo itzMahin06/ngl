@@ -17,7 +17,7 @@
       --textarea-border: #e0e0e0;
       --disabled-button-bg: #aaaaaa;
       --disabled-button-color: #666666;
-      --response-bg: #28a745;
+      --response-bg: #ddffde;
       --response-text-color: #ffffff;
       --notification-bg: #ddffde;
       --notification-text: #0d100d;
@@ -36,7 +36,7 @@
       --disabled-button-color: #aaaaaa;
       --response-bg: #28a745;
       --response-text-color: #ffffff;
-      --notification-bg: #f44336;
+      --notification-bg: #ddffde;
       --notification-text: #ffffff;
     }
 
@@ -362,10 +362,10 @@
 
     function startCountdown() {
       let timeLeft = 60;
-      showNotification(`Your message send successfully. Please wait ${timeLeft} seconds before sending another message.`);
+      showNotification(`Your message send successfully.`);
 
       const interval = setInterval(() => {
-        timeLeft -= 5;
+        timeLeft -= 10;
         showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
         
         if (timeLeft === 0) {
