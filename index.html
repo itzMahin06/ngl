@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anonymous Message</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6f86d6, #48c6ef);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1em;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    textarea {
+      width: 90%;
+      height: 100px;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      margin-bottom: 10px;
+      resize: none;
+      font-size: 1em;
+    }
+
+    button {
+      background: #48c6ef;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    button:hover:enabled {
+      background: #6f86d6;
+    }
+
+    #response {
+      margin-top: 20px;
+      padding: 10px;
+      background: #48c6ef;
+      border-radius: 5px;
+    }
+
+    #countdown {
+      margin-top: 10px;
+      color: #ffcc00;
+      font-size: 0.9em;
+    }
+      .footer {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  text-align: center;
+  padding: 15px 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-size: 0.9em;
+}
+
+.footer-content p {
+  margin: 5px 0;
+}
+
+.footer-content a {
+  color: #48c6ef;
+  text-decoration: none;
+}
+
+.footer-content a:hover {
+  text-decoration: underline;
+}
+
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Send Me an Anonymous Message</h1>
+    <p> ask me or send confessions! </p>
+    <form id="anonymousForm">
+      <textarea id="message" placeholder="Type your message here..." required></textarea>
+      <button type="submit" id="sendButton">Send Message</button>
+    </form>
+    <div id="response" class="hidden"></div>
+    <div id="countdown" class="hidden"></div>
+  </div>
+<footer class="footer">
+  <div class="footer-content">
+    <p>&copy; 2024 NGL (Mahin). All rights reserved.</p>
+    <p>
+      Created with ❤️ | 
+      <a href="https://www.instagram.com/_mahin728_" target="_blank"> Follow me on IG</a>
+    </p>
+  </div>
+</footer>
+
+  <script>
+    document.getElementById('anonymousForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const message = document.getElementById('message').value;
+      const sendButton = document.getElementById('sendButton');
+      const countdownDiv = document.getElementById('countdown');
+      const responseDiv = document.getElementById('response');
+
+      if (!message.trim()) {
+        alert('Please type a message!');
+        return;
+      }
+
+      try {
+        // Replace with your Telegram bot token and chat ID
+        const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E';
+        const chatId = '-1002020745172';
+        const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: chatId, text: message })
+        });
+
+        const result = await response.json();
+
+        if (result.ok) {
+          responseDiv.textContent = 'Your message has been sent successfully!';
+          responseDiv.classList.remove('hidden');
+          document.getElementById('anonymousForm').reset();
+          disableButtonWithCountdown(sendButton, countdownDiv);
+        } else {
+          responseDiv.textContent = 'Something went wrong. Please try again later.';
+          responseDiv.classList.remove('hidden');
+        }
+      } catch (error) {
+        responseDiv.textContent = 'Error sending message. Please try again later.';
+        responseDiv.classList.remove('hidden');
+      }
+    });
+
+    function disableButtonWithCountdown(button, countdownDiv) {
+      button.disabled = true;
+      let timeLeft = 60; // 1 minute countdown
+      countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+      countdownDiv.classList.remove('hidden');
+
+      const interval = setInterval(() => {
+        timeLeft -= 1;
+        countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          button.disabled = false;
+          countdownDiv.classList.add('hidden');
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
