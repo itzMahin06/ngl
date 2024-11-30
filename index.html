@@ -62,7 +62,7 @@
     .header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: left;
       margin-bottom: 20px;
     }
 
@@ -178,18 +178,18 @@
 <body data-theme="light">
   <div class="container">
     <header class="header">
-      <h1> Send Anonymous Message </h1>
+      <h1>Send Anonymous Message</h1>
       <button id="themeToggle" class="theme-toggle">🌙</button>
     </header>
     <main>
-      <p> Share your thoughts anonymously! </p>
+      <p>Share your thoughts anonymously. Your message will be delivered securely!</p>
       <form id="anonymousForm">
         <textarea id="message" placeholder="Type your message here..." required></textarea>
         <button type="submit" id="sendButton">Send Message</button>
       </form>
     </main>
-    <footer class="footer">
-      <p>&copy; 2024 NGL(Mahin). Design & Developed by <a href="https://www.facebook.com/itzMahin.2006" target="_blank">Mahmhdul Islam Mahin</a>.</p>
+    <footer class="footer"> 
+      <p>&copy; 2024 NGL(Mahin). Developed by <a href="https://www.facebook.com/itzMahin.2006" target="_blank"> Mahin </a>.</p>
     </footer>
   </div>
   <div id="notification" class="notification">
@@ -222,8 +222,9 @@
         return;
       }
 
-      // Disable the button and show notification
-      disableButtonWithNotification();
+      // Disable the button and show success message
+      sendButton.disabled = true;
+      showSuccessNotification();
 
       // Send the message to Telegram
       await sendMessageToTelegram(message);
@@ -236,7 +237,6 @@
       const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E'; // Replace with your Telegram Bot Token
       const chatId = '-1002020745172'; // Replace with your Chat ID
 
-      // Prepare the Telegram API URL with the message
       const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
       const data = {
@@ -244,7 +244,6 @@
         text: `Anonymous Message: ${message}`,
       };
 
-      // Send the request to Telegram Bot API
       try {
         const response = await fetch(telegramApiUrl, {
           method: 'POST',
@@ -264,16 +263,29 @@
       }
     }
 
-    function disableButtonWithNotification() {
-      sendButton.disabled = true;
+    function showSuccessNotification() {
+      notificationText.textContent = "Message sent successfully!";
+      notification.style.background = "#28a745"; // Success green background
+      notification.classList.add('show');
+      
+      // Hide success notification after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+      
+      // Start countdown notification if user tries to send again
+      startCountdown();
+    }
+
+    function startCountdown() {
       let timeLeft = 60;
       showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
 
       const interval = setInterval(() => {
         timeLeft -= 1;
         showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
-
-        if (timeLeft <= 0) {
+        
+        if (timeLeft === 0) {
           clearInterval(interval);
           sendButton.disabled = false;
           hideNotification();
@@ -281,22 +293,17 @@
       }, 1000);
     }
 
-    sendButton.addEventListener('click', (event) => {
-      if (sendButton.disabled) {
-        showNotification("You can't send messages yet. Please wait.");
-      }
-    });
-
-    closeNotification.addEventListener('click', hideNotification);
-
     function showNotification(message) {
       notificationText.textContent = message;
+      notification.style.background = "#f44336"; // Countdown red background
       notification.classList.add('show');
     }
 
     function hideNotification() {
       notification.classList.remove('show');
     }
+
+    closeNotification.addEventListener('click', hideNotification);
   </script>
 </body>
 </html>
