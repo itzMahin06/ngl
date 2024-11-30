@@ -348,7 +348,7 @@
 
     function showSuccessNotification() {
       notificationText.textContent = "Message sent successfully!";
-      notification.style.background = "#28a745"; // Success green background
+      notification.style.background = "#ddffde"; // Success green background
       notification.classList.add('show');
       
       // Hide success notification after 3 seconds
@@ -365,7 +365,7 @@
       showNotification(`Your message send successfully.`);
 
       const interval = setInterval(() => {
-        timeLeft -= 10;
+        timeLeft -= 1;
         showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
         
         if (timeLeft === 0) {
