@@ -15,6 +15,12 @@
       --textarea-bg: #ffffff;
       --textarea-text-color: #000000;
       --textarea-border: #e0e0e0;
+      --disabled-button-bg: #aaaaaa;
+      --disabled-button-color: #666666;
+      --response-bg: #28a745;
+      --response-text-color: #ffffff;
+      --notification-bg: #f44336;
+      --notification-text: #ffffff;
     }
 
     [data-theme="dark"] {
@@ -26,6 +32,12 @@
       --textarea-bg: #1e1e1e;
       --textarea-text-color: #ffffff;
       --textarea-border: #333333;
+      --disabled-button-bg: #555555;
+      --disabled-button-color: #aaaaaa;
+      --response-bg: #28a745;
+      --response-text-color: #ffffff;
+      --notification-bg: #f44336;
+      --notification-text: #ffffff;
     }
 
     body {
@@ -40,7 +52,7 @@
       max-width: 600px;
       margin: 0 auto;
       padding: 20px;
-      
+      background: var(--container-bg);
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       margin-top: 50px;
@@ -107,19 +119,44 @@
       background: #333333;
     }
 
-    .response {
-      margin-top: 20px;
-      padding: 10px;
-      
-      color: var(--button-color);
-      border-radius: 8px;
-      text-align: center;
+    button:disabled {
+      background: var(--disabled-button-bg);
+      color: var(--disabled-button-color);
+      cursor: not-allowed;
     }
 
-    .countdown {
-      margin-top: 10px;
-      color: var(--text-color);
-      font-size: 0.9rem;
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--notification-bg);
+      color: var(--notification-text);
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 300px;
+    }
+
+    .notification.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(-10px);
+    }
+
+    .notification button {
+      background: none;
+      border: none;
+      color: var(--notification-text);
+      font-size: 1.2rem;
+      cursor: pointer;
     }
 
     .footer {
@@ -141,7 +178,7 @@
 <body data-theme="light">
   <div class="container">
     <header class="header">
-      <h1>Send Anonymous Message</h1>
+      <h1> Send Anonymous Message </h1>
       <button id="themeToggle" class="theme-toggle">🌙</button>
     </header>
     <main>
@@ -150,20 +187,21 @@
         <textarea id="message" placeholder="Type your message here..." required></textarea>
         <button type="submit" id="sendButton">Send Message</button>
       </form>
-      <div id="response" class="response hidden"></div>
-      <div id="countdown" class="countdown hidden"></div>
     </main>
     <footer class="footer">
-      <p>&copy; 2024 NGL (Mahin). All rights reserved.</p>
-    <p>
-      Created with ❤️ | 
-      <a href="https://www.instagram.com/_mahin728_" target="_blank"> Follow me on IG</a>
-    </p>
+      <p>&copy; 2024 NGL(Mahin). Design & Developed by <a href="https://www.facebook.com/itzMahin.2006" target="_blank">Mahmhdul Islam Mahin</a>.</p>
     </footer>
+  </div>
+  <div id="notification" class="notification">
+    <span id="notificationText">This button is disabled for 60 seconds.</span>
+    <button id="closeNotification">&times;</button>
   </div>
   <script>
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
+    const notification = document.getElementById('notification');
+    const notificationText = document.getElementById('notificationText');
+    const closeNotification = document.getElementById('closeNotification');
 
     themeToggle.addEventListener('click', () => {
       const currentTheme = body.getAttribute('data-theme');
@@ -172,69 +210,92 @@
       themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
     });
 
-    document.getElementById('anonymousForm').addEventListener('submit', async function (event) {
+    const sendButton = document.getElementById('sendButton');
+    const messageInput = document.getElementById('message');
+
+    sendButton.addEventListener('click', async (event) => {
       event.preventDefault();
+      const message = messageInput.value.trim();
 
-      const message = document.getElementById('message').value;
-      const sendButton = document.getElementById('sendButton');
-      const countdownDiv = document.getElementById('countdown');
-      const responseDiv = document.getElementById('response');
-
-      if (!message.trim()) {
-        alert('Please type a message!');
+      if (message === "") {
+        alert("Please type a message before sending.");
         return;
       }
 
-      const userAgent = navigator.userAgent;
-      const platform = navigator.platform;
-      const browserInfo = `User-Agent: ${userAgent}\nPlatform: ${platform}`;
+      // Disable the button and show notification
+      disableButtonWithNotification();
 
-      const fullMessage = `Message: ${message}\n\n---\n${browserInfo}`;
+      // Send the message to Telegram
+      await sendMessageToTelegram(message);
 
-      try {
-        const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E';
-        const chatId = '-1002020745172';
-        const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: chatId, text: fullMessage })
-        });
-
-        const result = await response.json();
-
-        if (result.ok) {
-          responseDiv.textContent = 'Your message has been sent successfully!';
-          responseDiv.classList.remove('hidden');
-          document.getElementById('anonymousForm').reset();
-          disableButtonWithCountdown(sendButton, countdownDiv);
-        } else {
-          responseDiv.textContent = 'Something went wrong. Please try again later.';
-          responseDiv.classList.remove('hidden');
-        }
-      } catch (error) {
-        responseDiv.textContent = 'Error sending message. Please try again later.';
-        responseDiv.classList.remove('hidden');
-      }
+      // Clear the textarea after submission
+      messageInput.value = '';
     });
 
-    function disableButtonWithCountdown(button, countdownDiv) {
-      button.disabled = true;
+    async function sendMessageToTelegram(message) {
+      const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E'; // Replace with your Telegram Bot Token
+      const chatId = '-1002020745172'; // Replace with your Chat ID
+
+      // Prepare the Telegram API URL with the message
+      const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+      const data = {
+        chat_id: chatId,
+        text: `Anonymous Message: ${message}`,
+      };
+
+      // Send the request to Telegram Bot API
+      try {
+        const response = await fetch(telegramApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send message');
+        }
+        console.log('Message sent to Telegram');
+      } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Failed to send the message to Telegram.');
+      }
+    }
+
+    function disableButtonWithNotification() {
+      sendButton.disabled = true;
       let timeLeft = 60;
-      countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
-      countdownDiv.classList.remove('hidden');
+      showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
 
       const interval = setInterval(() => {
         timeLeft -= 1;
-        countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+        showNotification(`Please wait ${timeLeft} seconds before sending another message.`);
 
         if (timeLeft <= 0) {
           clearInterval(interval);
-          button.disabled = false;
-          countdownDiv.classList.add('hidden');
+          sendButton.disabled = false;
+          hideNotification();
         }
       }, 1000);
+    }
+
+    sendButton.addEventListener('click', (event) => {
+      if (sendButton.disabled) {
+        showNotification("You can't send messages yet. Please wait.");
+      }
+    });
+
+    closeNotification.addEventListener('click', hideNotification);
+
+    function showNotification(message) {
+      notificationText.textContent = message;
+      notification.classList.add('show');
+    }
+
+    function hideNotification() {
+      notification.classList.remove('show');
     }
   </script>
 </body>
