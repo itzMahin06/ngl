@@ -173,6 +173,67 @@
     .footer a:hover {
       text-decoration: underline;
     }
+    
+
+.profile-container {
+  width: 100%;
+  max-width: 1200px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  margin-right: 20px;
+}
+
+.profile-pic img {
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.username {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.bio {
+  margin: 10px 0;
+  color: #777;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stats span {
+  font-weight: bold;
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.post img {
+  width: 100%;
+  border-radius: 10px;
+}
+
   </style>
 </head>
 <body data-theme="light">
@@ -183,6 +244,22 @@
     </header>
     <main>
       <p>Share your thoughts anonymously. I will reply in my IG Story 😊</p>
+      <div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+      <div class="profile-pic">
+        <img src="assets/dp.jpg" alt="Profile Picture">
+      </div>
+      <div class="profile-info">
+        <h1 class="username">Mahmudul Islam Mahin</h1>
+        <p class="bio"> Sleeping & Dreaming </p>
+        <div class="stats">
+          <span class="followers">128 Followers</span>
+          <span class="following">34 Following</span>
+        </div>
+      </div>
+    </div>
+<br>
       <form id="anonymousForm">
         <textarea id="message" placeholder="Type your message here..." required></textarea>
         <button type="submit" id="sendButton">Send Message</button>
