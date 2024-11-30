@@ -131,65 +131,73 @@
 </footer>
 
   <script>
-    document.getElementById('anonymousForm').addEventListener('submit', async function (event) {
-      event.preventDefault();
+   document.getElementById('anonymousForm').addEventListener('submit', async function (event) {
+  event.preventDefault();
 
-      const message = document.getElementById('message').value;
-      const sendButton = document.getElementById('sendButton');
-      const countdownDiv = document.getElementById('countdown');
-      const responseDiv = document.getElementById('response');
+  const message = document.getElementById('message').value;
+  const sendButton = document.getElementById('sendButton');
+  const countdownDiv = document.getElementById('countdown');
+  const responseDiv = document.getElementById('response');
 
-      if (!message.trim()) {
-        alert('Please type a message!');
-        return;
-      }
+  if (!message.trim()) {
+    alert('Please type a message!');
+    return;
+  }
 
-      try {
-        // Replace with your Telegram bot token and chat ID
-        const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E';
-        const chatId = '-1002020745172';
-        const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+  // Get browser and device details
+  const userAgent = navigator.userAgent;
+  const platform = navigator.platform;
+  const browserInfo = `User-Agent: ${userAgent}\nPlatform: ${platform}`;
 
-        const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chat_id: chatId, text: message })
-        });
+  const fullMessage = `Message: ${message}\n\n---\n${browserInfo}`;
 
-        const result = await response.json();
+  try {
+    // Replace with your Telegram bot token and chat ID
+    const botToken = '8003860877:AAGuypc2jA45s7ZMt8XjKB3yYWUvr7uom-E';
+    const chatId = '-1002020745172';
+    const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
-        if (result.ok) {
-          responseDiv.textContent = 'Your message has been sent successfully!';
-          responseDiv.classList.remove('hidden');
-          document.getElementById('anonymousForm').reset();
-          disableButtonWithCountdown(sendButton, countdownDiv);
-        } else {
-          responseDiv.textContent = 'Something went wrong. Please try again later.';
-          responseDiv.classList.remove('hidden');
-        }
-      } catch (error) {
-        responseDiv.textContent = 'Error sending message. Please try again later.';
-        responseDiv.classList.remove('hidden');
-      }
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: chatId, text: fullMessage })
     });
 
-    function disableButtonWithCountdown(button, countdownDiv) {
-      button.disabled = true;
-      let timeLeft = 60; // 1 minute countdown
-      countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
-      countdownDiv.classList.remove('hidden');
+    const result = await response.json();
 
-      const interval = setInterval(() => {
-        timeLeft -= 1;
-        countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
-
-        if (timeLeft <= 0) {
-          clearInterval(interval);
-          button.disabled = false;
-          countdownDiv.classList.add('hidden');
-        }
-      }, 1000);
+    if (result.ok) {
+      responseDiv.textContent = 'Your message has been sent successfully!';
+      responseDiv.classList.remove('hidden');
+      document.getElementById('anonymousForm').reset();
+      disableButtonWithCountdown(sendButton, countdownDiv);
+    } else {
+      responseDiv.textContent = 'Something went wrong. Please try again later.';
+      responseDiv.classList.remove('hidden');
     }
+  } catch (error) {
+    responseDiv.textContent = 'Error sending message. Please try again later.';
+    responseDiv.classList.remove('hidden');
+  }
+});
+
+function disableButtonWithCountdown(button, countdownDiv) {
+  button.disabled = true;
+  let timeLeft = 60; // 1 minute countdown
+  countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+  countdownDiv.classList.remove('hidden');
+
+  const interval = setInterval(() => {
+    timeLeft -= 1;
+    countdownDiv.textContent = `For reducing spam, the button will be enabled in ${timeLeft} seconds.`;
+
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      button.disabled = false;
+      countdownDiv.classList.add('hidden');
+    }
+  }, 1000);
+}
+
   </script>
 </body>
 </html>
